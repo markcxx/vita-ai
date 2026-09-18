@@ -3,6 +3,7 @@
 .sample { display:inline-block; margin-top:8px; padding:2px 9px; border-radius:12px; background:#fef3c7; color:#92400e; font-size:11px; }
 .tabs { position:relative; display:flex; gap:28px; padding:0 40px; overflow-x:auto; border-bottom:1px solid #e8edf2; background:#ffffffed; }
 .tabs button { flex-shrink:0; padding:20px 0 17px; border-bottom:3px solid transparent; font-size:14px; color:#64748b; cursor:pointer; }
+.tabs button:hover { background:transparent; }
 .tabs button[aria-current] { color:#246da2; font-weight:600; }
 .tabs button:focus-visible { outline:2px solid #3289c5; outline-offset:-2px; }
 .content { padding:28px 40px 48px; }

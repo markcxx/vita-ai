@@ -3,17 +3,72 @@
   <h1>VitaAI · 简历与面试助手</h1>
   <p>从整理经历、打磨简历，到准备下一场面试。</p>
   <p>Next.js · FastAPI · PostgreSQL · Better Auth · LangGraph</p>
+  <p><a href="https://vitaai.markqq.com">在线使用</a> · <a href="#本地运行">本地运行</a> · <a href="deploy/README.md">部署指南</a></p>
 </div>
 
 VitaAI 是面向桌面浏览器的中文求职工作台，将简历编辑、模板预览、AI 辅助修改、简历分析和模拟面试放在同一个项目中。支持邮箱验证码注册、邮箱密码登录和 GitHub 登录，注册后即可使用，无需等候名单。
 
 用户自行选择模型服务，在设置中填写 API Key、Base URL 和模型名称。模型与语音密钥保存在当前浏览器，按账户区分，不写入数据库。未配置时显示提示，不会强制弹出设置；简历的手动编辑、浏览和管理不依赖模型密钥。
 
+## 从经历到面试
+
+1. **整理资料**：在个人资料库维护基础信息、教育、工作与实习、项目与校园经历、技能与偏好、证书与语言。一份资料可以用于多份岗位简历。
+2. **制作简历**：从模板开始手动编辑，或配置自己的模型后，让 AI 结合资料与岗位描述生成简历；生成结果保存到“我的简历”，可继续编辑。
+3. **打磨内容**：在编辑器中调整内容、版式与配色，审阅 AI 修改建议，再按需应用；通过简历分析查看不足。
+4. **准备投递**：导出文档或创建分享链接，再进入模拟面试练习回答、回顾记录与报告。
+
 ## 界面预览
 
-登录页采用与工作台插图一致的浅蓝折纸 Logo，支持邮箱和 GitHub 两种入口。下图为本地桌面端实际截图。
+以下为桌面端实际组件截图，重点展示简历编辑、分析报告和面试体验。报告与语音面试中的内容为虚构示例数据，用于展示界面，并非真实用户的评测结果。更多配置界面见 [界面画廊](docs/screenshots/README.md)。
 
-![VitaAI 桌面端登录页](docs/screenshots/login.png)
+### 简历工作台与编辑器
+
+| 我的简历 | AI 对话 |
+| --- | --- |
+| ![简历工作台](docs/screenshots/dashboard.png) | ![AI 对话](docs/screenshots/ai-chat.png) |
+
+![分节编辑与实时预览](docs/screenshots/editor.png)
+
+### 简历模板
+
+模板支持分类浏览、效果预览和配色切换。下面选取两种版式展示。
+
+| 晴空林语 | 侧页书签 |
+| --- | --- |
+| ![晴空林语模板预览](docs/screenshots/template-sky.png) | ![侧页书签蓝色预览](docs/screenshots/template-bookmark-blue.png) |
+
+### 个人资料库
+
+集中管理教育、工作、实习、项目和技能，为不同岗位的简历提供素材。
+
+![个人资料库](docs/screenshots/profile.png)
+
+### 简历分析报告
+
+报告展示求职能量、五维指数、简历优势及逐项改进建议。下图使用项目内置的示例报告。
+
+![简历分析报告：评分与指数分布](docs/screenshots/resume-report.png)
+
+### 语音模拟面试
+
+正式面试界面包含面试官、问题字幕、实时转写、麦克风控制与对话记录。下图由现有语音面试组件渲染，问答为虚构示例。
+
+![语音面试：面试官、字幕与对话记录](docs/screenshots/voice-interview.png)
+
+### 面试报告
+
+练习结束后可查看综合评分、能力分布、面试官评价、逐题复盘和提升建议。下图为现有报告组件配合虚构示例数据的展示。
+
+![面试报告：综合表现与能力雷达图](docs/screenshots/interview-report.png)
+
+<details>
+<summary>查看面试官选择与模型配置</summary>
+
+![面试官选择](docs/screenshots/interview-personas.png)
+
+![模型与语音配置](docs/screenshots/settings-models.png)
+
+</details>
 
 ## 功能介绍
 
@@ -24,7 +79,7 @@ VitaAI 是面向桌面浏览器的中文求职工作台，将简历编辑、模�
 | 模板库 | 多种简历版式、模板预览与换色，支持在编辑时切换模板 |
 | 导入与导出 | 导入简历内容；导出 PDF、Word、HTML、TXT、JSON，支持分享链接 |
 | AI 简历助手 | 分析岗位描述、检查语法、生成求职信、翻译、生成简历和面向岗位定制简历；修改方案可审阅后应用 |
-| 候选人画像 | 维护个人经历与能力信息，为简历生成和优化提供上下文 |
+| 个人资料库 | 分类维护教育、实习、工作、项目、技能与求职偏好；AI 优化表达前展示逐项对比，确认后保存 |
 | 简历分析 | 生成结构化分析报告，查看历史报告并导出 PDF；提供学生优势分析能力 |
 | 模拟面试 | 配置面试、进行文字或语音交互、保存面试记录、生成和导出面试报告 |
 | 分享 | 创建公开访问的简历链接，支持密码保护、有效期和停用 |
@@ -46,7 +101,7 @@ VitaAI 是面向桌面浏览器的中文求职工作台，将简历编辑、模�
 
 ### 数据保存与用户边界
 
-- **保存在 PostgreSQL**：账户与会话、简历及分节、候选人画像、用户设置、分享记录、分析结果、面试及报告等业务数据。
+- **保存在 PostgreSQL**：账户与会话、简历及分节、个人资料、用户设置、分享记录、分析结果、面试及报告等业务数据。
 - **保存在浏览器**：按账户隔离的模型与语音密钥，以及当前界面的临时状态。
 - **AI 助手对话**：当前界面不启用聊天记录持久化；这与需要保存的模拟面试记录是两项独立能力。
 - **用户隔离**：受保护 API 从登录会话解析用户身份，按资源归属校验读写权限，不信任客户端传入的用户 ID。公开分享通过独立的分享令牌与密码规则访问。
@@ -109,10 +164,10 @@ vita-ai/
 ├── frontend/
 │   ├── src/app/
 │   │   ├── (auth)/                 登录、注册、密码重置
-│   │   ├── (workspace)/            简历、模板、画像、分析和面试页面
+│   │   ├── (workspace)/            简历、模板、资料库、分析和面试页面
 │   │   ├── (public)/               公开分享页
 │   │   └── api/auth/               Better Auth 与邮箱验证码接口
-│   ├── src/components/             页面组件、编辑器、聊天、面试和设置
+│   ├── src/components/            页面组件、资料库、编辑器、聊天、面试和设置
 │   ├── src/hooks/                  聊天、语音、编辑器等交互逻辑
 │   ├── src/stores/                 Zustand 状态与简历自动保存
 │   ├── src/lib/
@@ -125,21 +180,26 @@ vita-ai/
 │   ├── scripts/render-resume.tsx   私有文档渲染器入口
 │   └── public/                    Logo、插图、字体与模板资源
 ├── backend/
-│   ├── app/api/routes/             业务 API、SSE 和文件响应
+│   ├── app/api/routes/            业务 API、SSE 和文件响应
 │   ├── app/api/dependencies.py     会话认证与用户归属依赖
-│   ├── app/services/               简历、分析、导出等业务服务
-│   ├── app/ai/                     模型适配、提示词、工具与工作流
-│   ├── app/domain/                 工具契约与分页规则
-│   ├── app/db/                     ORM 模型、表初始化与认证表迁移
+│   ├── app/services/              简历、分析、导出等业务服务
+│   ├── app/ai/                    模型适配、提示词、工具与工作流
+│   ├── app/domain/                工具契约与分页规则
+│   ├── app/db/                    ORM 模型、表初始化与认证表迁移
 │   ├── app/runtime_credentials.py  请求级模型与语音凭据
-│   ├── app/config.py               环境变量配置
+│   ├── app/config.py              环境变量配置
 │   └── tests/                     单元测试与 PostgreSQL 集成测试
 ├── docs/                          认证说明与 README 截图
-├── deploy/nginx.conf               容器部署同源路由
-├── scripts/dev.mjs                 前后端联合启动
-├── docker-compose.yml              网关、前端与后端服务
-├── .env.example                    环境变量模板，不含真实密钥
-└── pnpm-workspace.yaml              pnpm 工作区定义
+├── .github/workflows/deploy.yml    检查、构建 GHCR 镜像与服务器部署
+├── deploy/
+│   ├── compose.yaml               生产容器编排，绑定本机 3003 端口
+│   ├── nginx.conf                 页面、认证与业务 API 同源路由
+│   ├── deploy.sh                  按提交 SHA 部署、健康检查与失败回滚
+│   └── README.md                  服务器配置与运维指南
+├── scripts/dev.mjs                前后端联合启动
+├── docker-compose.yml             从源码构建的本地容器编排
+├── .env.example                   环境变量模板，不含真实密钥
+└── pnpm-workspace.yaml             pnpm 工作区定义
 ```
 
 ## 本地运行
@@ -162,7 +222,7 @@ uv sync --directory backend
 cp .env.example .env
 ```
 
-已有 `.env` 时跳过复制。项目不读取 `config.json`，前后端都从根目录 `.env` 或进程环境读取配置，进程环境优先。
+已有 `.env` 时跳过复制。前后端都从根目录 `.env` 或进程环境读取配置，进程环境优先。
 
 ### 3. 配置服务
 
@@ -188,7 +248,7 @@ GitHub OAuth 本地回调地址为：
 http://localhost:3000/api/auth/callback/github
 ```
 
-上线时将 OAuth 应用中的回调地址与 `APP_URL` 同步改为正式域名。当前不接入 Google 登录。验证码有效期、发送限额及超时等配置见 [.env.example](.env.example) 和 [认证说明](docs/authentication.md)。
+本地和生产环境建议使用两个独立的 OAuth 应用。生产应用的回调为 `https://你的域名/api/auth/callback/github`，其首页地址与 `APP_URL` 使用同一正式域名；将对应 Client ID 和 Client Secret 写入生产环境变量。当前不接入 Google 登录。验证码有效期、发送限额及超时等配置见 [.env.example](.env.example) 和 [认证说明](docs/authentication.md)。
 
 `.env` 中的 `AI_API_KEY` 与 `DASHSCOPE_API_KEY` 仅供离线开发脚本使用，不是注册用户的共享额度。用户在浏览器设置里填写自己的密钥后，才能调用相应服务。
 
@@ -207,7 +267,20 @@ pnpm dev
 
 ## 构建与部署
 
-生产服务器部署采用 GitHub Actions + GHCR，自动构建前后端镜像并进行健康检查与失败回滚。部署目录 `/opt/vitaai`，内部入口 `127.0.0.1:3003`。完整说明见 [生产部署](deploy/README.md)。
+### GitHub Actions 自动部署
+
+仓库的 [部署工作流](.github/workflows/deploy.yml) 在推送到 `main` 或手动触发时执行：
+
+```text
+类型检查与测试 → 前后端镜像构建 → GHCR 推送 → SSH 部署 → 服务健康检查
+                                                        └─ 失败：回滚上一版本镜像与部署配置
+```
+
+镜像分别为 `ghcr.io/markcxx/vita-ai-frontend` 和 `ghcr.io/markcxx/vita-ai-backend`，生产部署使用完整提交 SHA 标签。镜像面向 `linux/amd64`；回滚不撤销数据库迁移。
+
+GitHub 的 `production` Environment 需要配置 `DEPLOY_HOST`、`DEPLOY_PORT`、`DEPLOY_USER`、`DEPLOY_SSH_KEY`、`DEPLOY_KNOWN_HOSTS` 五个 Secrets。应用配置保存在服务器 `/opt/vitaai/.env.production`，不会由工作流覆盖。生产编排为 `deploy/compose.yaml`，网关只监听 `127.0.0.1:3003`，外层反向代理负责域名和 HTTPS。完整步骤见 [生产部署](deploy/README.md)。
+
+### 从源码构建
 
 
 ```bash
@@ -224,9 +297,21 @@ docker compose up -d --build
 
 Compose 包含 Nginx、Next.js 和 FastAPI，不内置 PostgreSQL；数据库由 `DATABASE_URL` 指向外部实例。后端镜像包含 Node、Chromium 和中文字体。
 
-正式部署需要配置 HTTPS、正式域名和 OAuth 回调；将 `APP_URL`、`PUBLIC_BASE_URL` 及 Compose 中的 `APP_CORS_ORIGINS` 改成实际来源。内部 `AUTH_SERVER_URL` 使用 `http://frontend:3000`。Nginx 保留 `/api/auth/*` 到前端认证服务，其余业务 API 转发到后端，流式响应不能启用缓冲。
+正式部署需要配置 HTTPS、正式域名和 OAuth 回调；生产 `.env.production` 中的 `APP_URL`、`PUBLIC_BASE_URL` 与 `APP_CORS_ORIGINS` 应与浏览器实际访问来源一致。根目录 Compose 用于本地容器运行，若将其用于其他域名，需要同时修改其覆盖的 `APP_CORS_ORIGINS`。内部 `AUTH_SERVER_URL` 使用 `http://frontend:3000`。Nginx 保留 `/api/auth/*` 到前端认证服务，其余业务 API 转发到后端，流式响应不能启用缓冲。
 
 `.env` 不提交到 Git，也不复制进镜像构建上下文。不要用 `NEXT_PUBLIC_*` 暴露数据库、SMTP 或 OAuth 密钥。
+
+## 常见问题
+
+| 现象 | 检查位置 |
+| --- | --- |
+| 接口返回 `403 请求来源无效` | `APP_URL` 是否与浏览器地址的协议、域名、端口一致；反向代理是否保留 `Host` 与原始 HTTPS 协议；修改容器环境后需要重新创建容器 |
+| GitHub 登录不可用或回调错误 | 是否同时设置 `AUTH_GITHUB_ID` 和 `AUTH_GITHUB_SECRET`；OAuth 应用回调是否为当前站点的 `/api/auth/callback/github` |
+| 无法发送注册验证码 | SMTP 账号、发件地址、SSL 端口与网络是否可用；是否触发发送频率限制 |
+| 提示缺少模型配置 | 在当前账户的“设置 → 模型与语音”填写自己的配置；服务器 `.env` 不向用户提供共享密钥 |
+| PDF 导出失败 | 本地 Chromium / `CHROME_PATH` 是否可用，文档渲染器是否已构建；容器部署使用包含 Chromium 的后端镜像 |
+
+修改生产环境变量后，在 `/opt/vitaai` 执行 `docker compose up -d --force-recreate --wait`。单独执行 `restart` 不会加载新的环境变量。可通过 `/api/v1/health/live` 检查存活，通过 `/api/v1/health/ready` 检查数据库就绪状态。
 
 ## 开发检查
 
