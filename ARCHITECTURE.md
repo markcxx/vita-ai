@@ -1,92 +1,56 @@
-# LT Employ Assistant Architecture
+# VitaAI 架构与请求边界
 
-项目采用前后端分离架构：Next.js 只负责页面和浏览器交互，FastAPI 是唯一服务端业务边界，并负责持久化、AI、文件处理、导出和面试编排。
+VitaAI 由 Next.js、FastAPI 与 PostgreSQL 组成。Next.js 负责界面和 Better Auth 认证；FastAPI 负责简历、画像、分析、面试、导出等业务。桌面端功能概览和完整目录见 [README](README.md)。
 
 ## 请求边界
 
 ```text
-Browser
-  │
-  ▼
-Gateway / Next proxy
-  ├─ /api/* ───────────────► FastAPI :8000
-  │                            ├─ SQLAlchemy persistence
-  │                            ├─ LangChain model adapter
-  │                            ├─ LangGraph workflows
-  │                            ├─ file parsing and export
-  │                            └─ DashScope realtime TTS
-  └─ /* ────────────────────► Next.js :3000
-                               ├─ App Router pages
-                               ├─ React components
-                               └─ Zustand client state
+浏览器
+  └─ 同源入口（开发：Next.js Proxy；生产：Nginx）
+       ├─ 页面、静态资源 → Next.js App Router
+       ├─ /api/auth/*   → Next.js Better Auth / 邮箱验证码 Route Handlers
+       └─ 其他 /api/*   → FastAPI
+                           ├─ 会话检查 → Next.js Better Auth
+                           ├─ SQLAlchemy → PostgreSQL
+                           ├─ LangChain / LangGraph → 模型服务
+                           ├─ DashScope → 语音合成
+                           └─ 私有 Node 渲染器 → HTML / PDF / Word
 ```
 
-`frontend/src/proxy.ts` 在本地开发时把全部 `/api/*` 请求流式转发到 FastAPI；容器部署由 Nginx 完成同样的同源路由。前端不包含 Route Handler、数据库访问、模型凭据或服务端领域逻辑。
+认证接口不能转发到 FastAPI。流式业务接口经过网关时保留响应体并关闭缓冲。外层 HTTPS 代理必须保留 Host 和原始协议，否则会影响认证及回调地址。
 
-## 后端
+## 认证与数据归属
 
-- `backend/app/api/routes`：HTTP API、SSE 和文件响应。
-- `backend/app/services`：资源读写、归一化和领域应用服务。
-- `backend/app/db`：SQLAlchemy 模型、会话和数据库初始化。
-- `backend/app/domain`：与框架解耦的工具契约。
-- `backend/app/ai/provider.py`：OpenAI、Anthropic、Gemini 和兼容服务的统一模型端口。
-- `backend/app/ai/tools.py`：LangChain 工具及简历 proposal 构造。
-- `backend/app/ai/workflows.py`：LangGraph 的完成、结构化生成、图片生成、聊天工具路由和流式输出图。
+Better Auth 使用 `pg` 访问同一个 PostgreSQL 数据库。邮箱注册先完成验证码校验，拿到短期、单次使用的注册凭证后创建账户；GitHub 使用 OAuth。FastAPI 从请求 Cookie 向内部认证服务核对会话，以真实登录用户 ID 查询资源，不采用客户端声明的用户归属。
 
-FastAPI 从根目录 `.env` 或进程环境变量读取配置。数据库使用 PostgreSQL 和 psycopg 异步驱动，`DATABASE_URL` 指定连接；首次启动创建缺失表、版本记录及本地工作区归属记录。现有表不会被清空或覆盖。数据归属详见 [数据库与归属](backend/DATABASE.md)。
+简历、画像、面试、报告、分享管理和设置接口均校验所有者。公开分享是独立入口，校验分享令牌、有效期及可选密码，不暴露原始账户信息。当前没有管理员或组织角色体系。
 
-## 前端
+## 持久化与密钥
 
-- `frontend/src/app/(workspace)`：页面和布局，不承载 API Route Handler。
-- `frontend/src/components`：简历编辑、预览、聊天、画像和面试界面。
-- `frontend/src/stores`：浏览器状态和编辑器自动保存状态。
-- `frontend/src/hooks`：API 聊天、分页、语音识别和实时音频播放。
-- `frontend/src/lib/api-proxy.ts`：开发环境的无缓冲流式代理。
+PostgreSQL 保存账户、会话、简历及分节、画像、设置、分享、分析、模拟面试和报告。当前聊天界面不启用 AI 对话持久化，模拟面试记录单独保存。
 
-客户端只通过 `/api/*` 调用后端。涉及持久化的 AI 修改采用 proposal/approval 边界：模型生成可审阅方案，用户批准后由应用服务校验并写入；批准结果回到 LangGraph 的文本总结节点，不允许重复工具调用。
+模型与语音 API Key 按用户保存在浏览器 localStorage。调用时随请求头发送到 FastAPI，以 ContextVar 隔离当前请求的模型配置；HTTP 请求不回退使用服务器环境里的 Key。语音地址由部署环境固定。用户 Key 不写数据库，也不放入 NEXT_PUBLIC 环境变量。
 
-## 主要领域
+## 编辑和 AI 工作流
 
-### 简历与画像
+简历编辑首先修改 Zustand 状态，再通过 API 自动保存。服务端通过版本号检查和行锁处理并发修改，保存失败时保留未保存状态。
 
-简历、section、候选人画像、分享记录和聊天记录均由 FastAPI/SQLAlchemy 管理。编辑器先更新 Zustand 副本，再通过后端接口保存。导入、附件解析、GitHub 数据读取、PDF/DOCX/HTML/TXT/JSON 导出都由后端实现。
+AI SDK 处理前端消息流；LangGraph 编排模型、工具和流式结果。涉及简历写入的 AI 方案经过用户确认后再由业务服务执行。模型上下文可以包含历史工具调用，但不代表用户已确认或界面操作已经完成。
 
-### AI 助手
+## 导出与语音
 
-AI SDK 负责浏览器 UI message stream；FastAPI 将模型事件转换为对应 SSE 协议。LangGraph 明确区分普通聊天、工具选择、工具执行和界面工作流确认。当前模型上下文每次从数据库读取最新简历或画像，工具结果不会拼接到可见正文。
+FastAPI 校验归属后通过标准输入调用私有 Node 渲染器，渲染器不连接数据库、不开放 HTTP 端口。后端 Docker 镜像包含 Node、Chromium、字体和构建好的渲染器；模板改变后需重新构建。
 
-### 模拟面试
+语音面试将模型文本增量提交 DashScope WebSocket，再将音频片段通过 SSE 传回浏览器播放。语音需要用户自己的 Key；文字面试与语音播放属于不同能力。
 
-文字由 LangGraph/模型增量输出。语音模式在同一次面试响应中建立一个 DashScope 双工 WebSocket：模型文本 delta 连续发送为 `continue-task`，返回的音频帧通过瞬态 SSE data part 传到浏览器，并由 MediaSource 追加播放；模型结束后才发送 `finish-task`。
+## 部署
 
-### 模板、分享与导出
-
-模板元数据由 `frontend/src/lib/template-catalog.ts` 管理，预览映射位于 `frontend/src/components/preview/template-registry.ts`。服务端导出位于 `backend/app/api/routes/files.py`，分享资源接口位于 `backend/app/api/routes/resources.py`。
-
-## 本地工作区与数据归属
-
-当前页面和 API 不需要登录、Cookie、SSO 或浏览器指纹。后端通过固定本地工作区归属记录提供业务所需的用户 ID；`users`、业务表中的 `user_id`、外键和资源归属检查仍然保留。原有账号的数据不会自动合并到本地工作区。
-
-启动时幂等初始化 PostgreSQL 表和本地工作区记录，保留 `users`、`user_id` 和外键归属关系。无需导入旧数据。AI 和 DashScope 密钥仍只在后端使用。配置只通过环境变量及根目录 `.env` 读取。
-
-## 构建与验证
-
-```bash
-pnpm build
-pnpm type-check
-pnpm test
-pnpm lint
-pnpm test:api
-pnpm check:api
-```
-
-前端生产镜像只包含 Next.js standalone 运行时和静态资源；后端镜像包含 Python 运行时、数据库驱动、文件处理和导出依赖。
+GitHub Actions 验证代码并构建前后端镜像，以提交 SHA 推送 GHCR。服务器 `/opt/vitaai` 使用独立 Compose 项目，只监听 `127.0.0.1:3003`；健康检查失败回滚上一组镜像和配置。数据库位于外部 PostgreSQL 实例，环境文件不进入镜像或 Git。部署细节见 [deploy/README.md](deploy/README.md)。
 
 ## 扩展原则
 
-- 所有新 API 和服务端业务进入 FastAPI。
-- LangGraph 负责编排，写操作由应用服务执行。
-- 工具输入必须经过 schema 和真实资源 ID 校验。
-- 流式响应经过代理时必须保留响应体并禁用缓冲。
-- React 组件负责展示和交互，纯消息转换放入独立模块并单测。
-- 删除能力时同步删除路由、依赖、容器配置、测试与文档。
+- 认证扩展放在 Next.js 认证模块；其他服务端业务放在 FastAPI。
+- 新业务资源的每个读写入口必须检查归属，包括导出、分享管理及嵌套子资源。
+- AI 编排不直接绕过服务层修改数据，输入需经过 schema 和真实资源校验。
+- 数据库变更提供幂等、向后兼容的迁移，不依赖 create_all 修改已有列。
+- 删除功能时同步检查静态资源、动态路径、导出渲染器、测试和文档。
