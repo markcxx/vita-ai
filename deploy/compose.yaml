@@ -1,0 +1,48 @@
+name: vitaai
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  gateway:
+    image: nginx:1.28-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3003:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/login"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging: *logging
+
+  frontend:
+    image: ${VITAAI_FRONTEND_IMAGE:?Set VITAAI_FRONTEND_IMAGE}
+    restart: unless-stopped
+    init: true
+    env_file: /opt/vitaai/.env.production
+    environment:
+      NODE_ENV: production
+      BACKEND_PROXY_URL: http://backend:8000
+    logging: *logging
+
+  backend:
+    image: ${VITAAI_BACKEND_IMAGE:?Set VITAAI_BACKEND_IMAGE}
+    restart: unless-stopped
+    init: true
+    shm_size: 256mb
+    env_file: /opt/vitaai/.env.production
+    environment:
+      APP_ENV: production
+      AUTH_SERVER_URL: http://frontend:3000
+    logging: *logging

@@ -15,3 +15,7 @@ vitaai-data
 *.db
 .env*
 !.env.example
+
+docs
+frontend/dist
+*.log

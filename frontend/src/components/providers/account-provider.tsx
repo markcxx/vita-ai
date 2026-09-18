@@ -1,7 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { setCredentialOwner, credentialHeaders, hasModelCredentials, requiresModelCredentials } from '@/lib/local-credentials';
-import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 const AccountContext = createContext({ email: '' });
@@ -9,15 +8,13 @@ export function AccountProvider({ children, userId, email }: { children: React.R
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setCredentialOwner(userId);
-    const showCredentials = () => { useUIStore.getState().setSettingsTab('credentials'); useUIStore.getState().openModal('settings'); };
-    if (!hasModelCredentials()) showCredentials();
+    if (!hasModelCredentials()) toast.info('使用 AI 功能前，请到「设置 → 模型与语音」配置自己的 API Key、Base URL 和模型名称', { id: 'model-credentials-reminder', duration: 6000 });
     const original = window.fetch.bind(window);
     window.fetch = async (input, init) => {
       const url = new URL(input instanceof Request ? input.url : String(input), window.location.href);
       if (url.origin !== window.location.origin || !url.pathname.startsWith('/api/') || url.pathname.startsWith('/api/auth/')) return original(input, init);
       const method = init?.method ?? (input instanceof Request ? input.method : 'GET');
       if (requiresModelCredentials(url.pathname, method) && !hasModelCredentials()) {
-        showCredentials();
         const message = '请先在设置中填写自己的 API Key、Base URL 和模型名称';
         toast.error(message);
         return Response.json({ detail: message, error: message }, { status: 428 });

@@ -24,7 +24,9 @@ COPY frontend ./frontend
 WORKDIR /workspace/frontend
 ARG APP_NAME=VitaAI
 ENV APP_NAME=$APP_NAME
-RUN pnpm build
+RUN AUTH_SECRET=build-only-placeholder-not-used-at-runtime-0000000000 \
+    DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build \
+    APP_URL=http://localhost:3000 pnpm build
 
 FROM node:26-alpine AS runner
 WORKDIR /app/frontend
@@ -48,7 +50,7 @@ USER node
 EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
-  CMD node -e "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://127.0.0.1:3000/login').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "--use-env-proxy", "server.js"]

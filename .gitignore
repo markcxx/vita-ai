@@ -59,7 +59,9 @@ test
 *.py[cod]
 
 output/
-docs/
+docs/*
+!docs/authentication.md
+!docs/screenshots/
 tmp/
 
 # Generated renderer and local tooling

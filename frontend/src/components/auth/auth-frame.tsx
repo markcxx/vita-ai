@@ -1,22 +1,13 @@
 'use client';
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
-import { AgentAvatar } from './AgentAvatar';
 import { BrandLogo } from '@/components/layout/brand-logo';
 function AuthGuide({ compact = false }: { compact?: boolean }) {
-  const [arriving, setArriving] = useState(true);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduceMotion(media.matches);
-    const timer = window.setTimeout(() => setArriving(false), 1300);
-    return () => window.clearTimeout(timer);
-  }, []);
   return <div className={compact ? 'mb-7 flex items-center gap-3 md:hidden' : 'max-w-sm'}>
     <div className={compact ? 'flex h-14 w-14 shrink-0 items-center justify-center' : 'flex h-28 w-28 items-center justify-center'}>
-      <AgentAvatar ambient={!arriving} animate expression="mefiant" followPointer interactive playful reduceMotion={reduceMotion} size={compact ? 52 : 104} state={arriving ? 'swirl' : 'idle'} />
-    </div><div><p className={compact ? 'text-sm font-semibold' : 'text-2xl font-semibold'}>很高兴见到你</p><p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">登录后继续你的对话、文件与工具。</p></div>
+      <Image src="/vitaai-icon-transparent.png" alt="VitaAI 项目图标" width={compact ? 52 : 104} height={compact ? 52 : 104} priority unoptimized />
+    </div><div><p className={compact ? 'text-sm font-semibold' : 'text-2xl font-semibold'}>很高兴见到你</p><p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">从一份好简历，开始下一段职业旅程。</p></div>
   </div>;
 }
 export function AuthFrame({ children }: { children: React.ReactNode }) {
