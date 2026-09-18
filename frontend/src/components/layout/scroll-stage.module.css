@@ -1,0 +1,18 @@
+.frame { position:relative; height:100%; min-height:0; isolation:isolate; }
+.viewport { height:100%; overflow-y:auto; overflow-x:clip; --intro-opacity:1; --intro-shift:0px; --intro-scale:1; }
+.viewport [data-scroll-intro] { opacity:var(--intro-opacity); transform:translateY(var(--intro-shift)) scale(var(--intro-scale)); transform-origin:left top; }
+.toolbar { position:absolute; inset:0 0 auto; z-index:30; display:flex; flex-direction:column; gap:10px; min-height:64px; padding:12px 28px; background:color-mix(in srgb,var(--background) 94%,transparent); backdrop-filter:blur(14px); border-bottom:1px solid var(--border); box-shadow:0 3px 14px #00000005; opacity:0; transform:translateY(-12px); pointer-events:none; transition:opacity .2s ease,transform .24s ease; }
+.toolbar[data-visible=true] { opacity:1; transform:translateY(0); pointer-events:auto; }
+.toolbarMain>strong { font-size:15px; font-weight:600; white-space:nowrap; }
+.actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:8px; font-size:13px; }
+@media(max-width:640px) { .toolbar { padding:10px 14px; gap:8px; } .actions { gap:6px; } .actions button { padding-inline:10px; font-size:12px; } }
+@media(prefers-reduced-motion:reduce) { .viewport [data-scroll-intro] { transform:none; } .toolbar { transition:none; transform:none; } }
+
+.toolbarMain { display:flex; align-items:center; justify-content:space-between; width:100%; gap:16px; }
+.toolbarMain>strong { overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.chapters { display:flex; gap:6px; width:100%; overflow-x:auto; }
+.chapters button { padding:5px 10px; border-radius:6px; font-size:12px; color:var(--muted-foreground); white-space:nowrap; }
+.chapters button[aria-current=location] { background:var(--muted); color:var(--foreground); font-weight:600; }
+.readingProgress { position:absolute; height:2px; inset:auto 0 0; background:var(--brand); transform:scaleX(var(--reading-progress,0)); transform-origin:left; }
+
+.controls { width:100%; min-width:0; }

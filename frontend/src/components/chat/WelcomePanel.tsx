@@ -1,0 +1,83 @@
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+import { FluentEmoji } from "@/components/FluentEmoji";
+import { useRuntimeConfig } from "@/components/providers/runtime-config-provider";
+
+const WELCOME_EMOJIS = ["🙂", "😊", "😄", "😁", "🤗", "🤩", "😎", "🫡", "😉"];
+
+const pickWelcomeEmoji = () => WELCOME_EMOJIS[Math.floor(Math.random() * WELCOME_EMOJIS.length)];
+
+function AnimatedEmojiLogo() {
+  const [emoji, setEmoji] = useState("🙂");
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setEmoji(pickWelcomeEmoji()));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div className="markai-logo-face flex h-16 w-16 shrink-0 items-center justify-center md:h-20 md:w-20">
+      <FluentEmoji emoji={emoji} size={64} />
+      <style>{`
+        @keyframes markai-logo-float {
+          0%, 100% { transform: translateY(0) rotate(-2deg); }
+          50% { transform: translateY(-5px) rotate(2deg); }
+        }
+
+        .markai-logo-face {
+          animation: markai-logo-float 4.2s ease-in-out infinite;
+          transform-origin: center bottom;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function TypewriterText({ text }: { text: string }) {
+  const [visibleLength, setVisibleLength] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setVisibleLength((length) => {
+        if (length >= text.length) {
+          window.clearInterval(interval);
+          return length;
+        }
+        return length + 1;
+      });
+    }, 58);
+
+    return () => window.clearInterval(interval);
+  }, [text]);
+
+  return (
+    <p aria-label={text} className="mt-2 min-h-6 text-[15px] text-gray-500 dark:text-gray-400">
+      <span aria-hidden="true">{text.slice(0, visibleLength)}</span>
+      <span
+        aria-hidden="true"
+        className="ml-0.5 inline-block h-4 w-px translate-y-0.5 animate-pulse bg-gray-400 dark:bg-gray-500"
+      />
+    </p>
+  );
+}
+
+export function WelcomePanel({ children }: { children: ReactNode }) {
+  const { appName } = useRuntimeConfig();
+  const welcomeText = `你好，我是 ${appName}。今天想优化哪部分简历？`;
+
+  return (
+    <div className="flex w-full max-w-[840px] flex-col items-center px-0 md:px-4">
+      <div className="mb-6 flex items-center gap-3 md:mb-8 md:gap-4">
+        <AnimatedEmojiLogo />
+        <div className="min-w-0">
+          <h1 className="font-jakarta text-2xl font-semibold text-gray-950 dark:text-gray-50 md:text-3xl">
+            {appName}
+          </h1>
+          <TypewriterText text={welcomeText} />
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}

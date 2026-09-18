@@ -1,0 +1,25 @@
+.canvas {
+  height:100%;
+  min-width:0;
+  overflow:hidden;
+  background:#ffffff;
+}
+.section {
+  --section-tint:#f0edf9;
+  --section-accent:#927ac1;
+  background:var(--section-tint);
+  border-color:color-mix(in srgb,var(--section-accent) 22%,transparent);
+  box-shadow:0 2px 8px #24344905;
+}
+.section[data-section-type=personal_info] { --section-tint:#eaf3fc; --section-accent:#709bca; }
+.section[data-section-type=summary] { --section-tint:#f0ebfa; --section-accent:#9b83c5; }
+.section[data-section-type=work_experience] { --section-tint:#e8f5ee; --section-accent:#65a78b; }
+.section[data-section-type=education] { --section-tint:#fdf3df; --section-accent:#bd9a50; }
+.section[data-section-type=projects] { --section-tint:#e5f3f4; --section-accent:#68a4aa; }
+.section[data-section-type=skills] { --section-tint:#fceee5; --section-accent:#cb926c; }
+.section[data-section-type=certifications] { --section-tint:#f9eaf0; --section-accent:#bd829c; }
+.section[data-section-type=languages] { --section-tint:#edf3e5; --section-accent:#90a76c; }
+.section > div:first-child h3 { color:color-mix(in srgb,var(--section-accent) 55%,#18232f); }
+:global(.dark) .canvas { background:#202329; }
+:global(.dark) .section { background:color-mix(in srgb,var(--section-accent) 14%,#202329); border-color:color-mix(in srgb,var(--section-accent) 28%,transparent); }
+:global(.dark) .section > div:first-child h3 { color:color-mix(in srgb,var(--section-accent) 35%,#f5f5f5); }

@@ -1,0 +1,41 @@
+.workspace { display:grid; grid-template-columns:minmax(0,var(--editor-left,52.4fr)) 24px minmax(0,var(--editor-right,47.6fr)); flex:1; min-height:0; padding:12px; }
+.moduleNavigation { width:176px; min-height:0; flex-shrink:0; overflow:hidden; transition:width .36s cubic-bezier(.22,1,.36,1); }
+.workspace[data-collapsed=true] .moduleNavigation { width:0; visibility:hidden; transition:width .36s cubic-bezier(.22,1,.36,1),visibility 0s .36s; }
+.editing { display:flex; min-width:0; min-height:0; overflow:hidden; border-radius:6px; background:var(--card); box-shadow:0 0 0 1px var(--border); }
+
+.divider { width:0; flex-shrink:0; background:transparent; display:flex; align-items:center; justify-content:center; position:relative; z-index:20; }
+.collapseButton { display:grid; place-items:center; width:20px; height:38px; border:0; border-radius:5px; color:var(--muted-foreground); background:transparent; cursor:pointer; flex-shrink:0; }
+.collapseButton:hover { color:var(--foreground); background:var(--muted); }
+.workspace[data-collapsed=true] .divider { width:20px; }
+.resizeHandle { display:flex; align-items:center; justify-content:center; cursor:col-resize; touch-action:none; outline-offset:-4px; }
+.resizeHandle span { width:3px; height:36px; border-radius:2px; background:var(--border); transition:background .15s; }
+.resizeHandle:hover span,.resizeHandle:focus-visible span,.workspace[data-resizing=true] .resizeHandle span { background:var(--muted-foreground); }
+.workspace[data-resizing=true] { user-select:none; cursor:col-resize; }
+.rightPanel { min-width:0; min-height:0; }
+.flipStage { position:relative; height:100%; perspective:1800px; }
+.face { position:absolute; inset:0; display:flex; flex-direction:column; min-height:0; overflow:hidden; border:1px solid var(--border); border-radius:6px; background:var(--card); backface-visibility:hidden; transform:rotateY(-180deg); visibility:hidden; transition:transform .52s cubic-bezier(.4,0,.2,1),visibility 0s .52s; }
+.face[data-active=true] { z-index:2; transform:rotateY(0); visibility:visible; transition:transform .52s cubic-bezier(.4,0,.2,1),visibility 0s; }
+.faceHeader { display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-height:48px; padding:8px 14px; flex-shrink:0; background:var(--card); }
+.faceTitle { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:500; margin-right:auto; color:var(--muted-foreground); }
+.faceActions { display:flex; align-items:center; gap:4px; }
+.previewBody { position:relative; flex:1; min-height:0; }
+.previewScroll { height:100%; overflow:auto; background:#fff; }
+.paperSpace { padding:12px 44px 32px; min-height:100%; }
+.paper { margin:0 auto; color:#18181b; background:#fff; }
+/* Templates also supply their own paper shadow; flatten only the outer surface. */
+.paper > div,
+.paper > div[data-theme-scope] > div { box-shadow:none; border-radius:0; }
+.colors { position:absolute; z-index:3; left:9px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px; padding:10px 6px; border:1px solid var(--border); border-radius:6px; background:var(--card); }
+.colors button { width:16px; height:16px; border:2px solid var(--card); border-radius:50%; cursor:pointer; }
+.colors button[aria-pressed=true] { outline:1.5px solid var(--foreground); outline-offset:2px; }
+.zoomControls { display:flex; align-items:center; justify-content:center; gap:8px; padding:6px; font-size:11px; color:var(--muted-foreground); }
+@media(max-width:1100px) and (min-width:768px) { .moduleNavigation { width:140px; } .moduleNavigation > div { width:140px; } }
+@media(max-width:767px) {
+  .workspace { display:flex; padding:8px; }
+  .editing,.rightPanel { width:100%; flex:1; }
+  .moduleNavigation,.divider,.resizeHandle,.mobileHidden { display:none; }
+  .faceHeader { padding:8px; }
+  .paperSpace { padding:10px 34px 24px; }
+  .colors { left:5px; padding:8px 4px; }
+}
+@media(prefers-reduced-motion:reduce) { .moduleNavigation,.workspace[data-collapsed=true] .moduleNavigation,.face,.face[data-active=true] { transition:none; } }

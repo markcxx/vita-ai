@@ -1,0 +1,14 @@
+.frame { position: relative; height: 100%; min-height: 0; isolation: isolate; background: var(--background); }
+.backdrop { position: absolute; inset: 0 0 auto; height: 440px; overflow: hidden; pointer-events: none; z-index: -1; background: var(--muted); }
+.backdrop img { object-fit: cover; object-position: center top; }
+.backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, var(--background)); }
+.viewport { height: 100%; overflow-y: auto; overflow-x: clip; position: relative; --collapse-progress: 0; --intro-opacity: 1; --intro-scale: 1; --collapse-distance: 190px; scroll-padding-top: 160px; }
+.viewport [data-gallery-page] { background: transparent; }
+.viewport [data-gallery-hero] { position: sticky; top: calc(-1 * var(--collapse-distance)); z-index: 20; overflow: visible; padding-bottom: 18px; background: transparent; isolation: isolate; }
+.viewport [data-gallery-intro] { opacity: var(--intro-opacity); transform: scale(var(--intro-scale)); transform-origin: left top; will-change: transform, opacity; }
+.viewport[data-collapsed=true] [data-gallery-intro] { visibility: hidden; }
+.viewport [data-gallery-controls] { position: relative; }
+.viewport [data-gallery-collection] { margin-top: 16px; }
+:global(.dark) .backdrop img { opacity: .3; }
+@media(max-width:760px) { .backdrop { height: 480px; } .backdrop img { opacity: .45; } }
+@media(prefers-reduced-motion:reduce) { .viewport [data-gallery-intro] { transform: none; will-change: auto; } }

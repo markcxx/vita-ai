@@ -1,0 +1,4 @@
+packages:
+  - frontend
+
+onlyBuiltDependencies: '@swc/core,sharp,unrs-resolver,esbuild,@parcel/watcher'

@@ -1,0 +1,362 @@
+{
+  "folio-cloud": {
+    "name": "晴空林语",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-growth": {
+    "name": "向上阶梯",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-dots": {
+    "name": "点阵书页",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-bookmark": {
+    "name": "侧页书签",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-spark": {
+    "name": "折线微光",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-breeze": {
+    "name": "清风侧页",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-diamond": {
+    "name": "菱格映衬",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-floral": {
+    "name": "花语细线",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-gear": {
+    "name": "齿轮侧栏",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-banner": {
+    "name": "柔色横幅",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-prism": {
+    "name": "几何棱角",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-notebook": {
+    "name": "装订双栏",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-botanical": {
+    "name": "自然剪影",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-line": {
+    "name": "清雅线条",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "folio-aqua": {
+    "name": "斜切波纹",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/reference.tsx"
+  },
+  "classic": {
+    "name": "经典",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/classic.tsx"
+  },
+  "modern": {
+    "name": "现代",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/modern.tsx"
+  },
+  "minimal": {
+    "name": "极简",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/minimal.tsx"
+  },
+  "professional": {
+    "name": "专业",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/professional.tsx"
+  },
+  "two-column": {
+    "name": "双栏",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/two-column.tsx"
+  },
+  "ats": {
+    "name": "简历筛选友好",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/ats.tsx"
+  },
+  "academic": {
+    "name": "学术",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/academic.tsx"
+  },
+  "elegant": {
+    "name": "优雅",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/elegant.tsx"
+  },
+  "executive": {
+    "name": "高管",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/executive.tsx"
+  },
+  "developer": {
+    "name": "开发者",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/developer.tsx"
+  },
+  "designer": {
+    "name": "设计师",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/designer.tsx"
+  },
+  "formal": {
+    "name": "正式",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/formal.tsx"
+  },
+  "compact": {
+    "name": "紧凑",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/compact.tsx"
+  },
+  "euro": {
+    "name": "欧式",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/euro.tsx"
+  },
+  "clean": {
+    "name": "清新",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/clean.tsx"
+  },
+  "bold": {
+    "name": "醒目",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/bold.tsx"
+  },
+  "timeline": {
+    "name": "时间轴",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/timeline.tsx"
+  },
+  "nordic": {
+    "name": "北欧",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/nordic.tsx"
+  },
+  "corporate": {
+    "name": "企业",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/corporate.tsx"
+  },
+  "consultant": {
+    "name": "顾问",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/consultant.tsx"
+  },
+  "finance": {
+    "name": "金融",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/finance.tsx"
+  },
+  "medical": {
+    "name": "医疗",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/medical.tsx"
+  },
+  "metro": {
+    "name": "都市",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/metro.tsx"
+  },
+  "material": {
+    "name": "质感",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/material.tsx"
+  },
+  "coder": {
+    "name": "码农",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/coder.tsx"
+  },
+  "blocks": {
+    "name": "块状",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/blocks.tsx"
+  },
+  "magazine": {
+    "name": "杂志",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/magazine.tsx"
+  },
+  "artistic": {
+    "name": "艺术",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/artistic.tsx"
+  },
+  "retro": {
+    "name": "复古",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/retro.tsx"
+  },
+  "watercolor": {
+    "name": "水彩",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/watercolor.tsx"
+  },
+  "swiss": {
+    "name": "瑞士",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/swiss.tsx"
+  },
+  "japanese": {
+    "name": "和风",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/japanese.tsx"
+  },
+  "berlin": {
+    "name": "柏林",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/berlin.tsx"
+  },
+  "luxe": {
+    "name": "奢华",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/luxe.tsx"
+  },
+  "rose": {
+    "name": "玫瑰",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/rose.tsx"
+  },
+  "architect": {
+    "name": "建筑师",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/architect.tsx"
+  },
+  "legal": {
+    "name": "律师",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/legal.tsx"
+  },
+  "teacher": {
+    "name": "教师",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/teacher.tsx"
+  },
+  "scientist": {
+    "name": "科学家",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/scientist.tsx"
+  },
+  "engineer": {
+    "name": "工程师",
+    "mode": "flow",
+    "reason": "纵向文档结构，适合在完整经历或章节之间续页",
+    "source": "frontend/src/components/preview/templates/engineer.tsx"
+  },
+  "sidebar": {
+    "name": "侧边栏",
+    "mode": "pagination_pending",
+    "reason": "正文与侧栏独立流动，尚无续页列对齐和背景延续规则",
+    "source": "frontend/src/components/preview/templates/sidebar.tsx"
+  },
+  "card": {
+    "name": "卡片",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/card.tsx"
+  },
+  "zigzag": {
+    "name": "锯齿",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/zigzag.tsx"
+  },
+  "ribbon": {
+    "name": "缎带",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/ribbon.tsx"
+  },
+  "mosaic": {
+    "name": "马赛克",
+    "mode": "prefer_one_page",
+    "reason": "强调装饰页头、时间线或卡片的整体构图，优先保持单页",
+    "source": "frontend/src/components/preview/templates/mosaic.tsx"
+  }
+}
