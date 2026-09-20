@@ -25,8 +25,10 @@ COPY --from=renderer-build /usr/local/bin/node /usr/local/bin/node
 COPY --from=renderer-build /renderer/node_modules /opt/resume-renderer/node_modules
 COPY --from=renderer-build /workspace/frontend/dist/resume-renderer.cjs /opt/resume-renderer/resume-renderer.cjs
 COPY --from=renderer-build /workspace/frontend/public /opt/resume-renderer/public
-RUN apt-get update && apt-get install -y --no-install-recommends chromium fonts-noto-cjk fonts-liberation \
-    && rm -rf /var/lib/apt/lists/*
+# Node is copied from another image; its shared libraries must be installed here.
+RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 chromium fonts-noto-cjk fonts-liberation \
+    && rm -rf /var/lib/apt/lists/* \
+    && node --version
 
 WORKDIR /app
 
