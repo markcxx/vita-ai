@@ -198,6 +198,13 @@ async def save_profile(
     data = body.get("data", body)
     if not isinstance(data, dict):
         raise HTTPException(status_code=422, detail="Profile data must be an object")
+    if "expectedVersion" in body:
+        # Serialize concurrent imports and refuse to overwrite a newer profile.
+        profile = await session.scalar(select(CandidateProfile).where(
+            CandidateProfile.user_id == user.id,
+        ).with_for_update().execution_options(populate_existing=True))
+        if profile.version != body["expectedVersion"]:
+            raise HTTPException(409, "资料已在其他页面更新，请关闭导入并刷新页面后重试")
     profile.data = normalize_profile_data(data)
     profile.version += 1
     await session.commit()

@@ -6,6 +6,7 @@ from app.api.routes import (
     files,
     health,
     interviews,
+    profile_import,
     resources,
     resume_analysis,
     student_strengths,
@@ -24,6 +25,7 @@ application_routers = (
     ai.router,
     interviews.router,
     files.router,
+    profile_import.router,
     resume_analysis.router,
     student_strengths.router,
 )

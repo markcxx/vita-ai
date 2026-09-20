@@ -1,8 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { LoaderCircle, Sparkles } from 'lucide-react';
+import { LoaderCircle, Sparkles, Upload } from 'lucide-react';
 import Image from 'next/image';
+import { ProfileImportDialog } from '@/components/profile/profile-import-dialog';
 import { ProfileNavigation } from '@/components/profile/profile-navigation';
 import { ProfileEditor, profileEditorTitle } from '@/components/profile/profile-editor';
 import { ProfileOverview, PROFILE_TABS, type ProfileAddKind } from '@/components/profile/profile-overview';
@@ -39,6 +40,7 @@ type OptimizationProposal = {
 };
 
 export default function CandidateProfilePage() {
+  const [importOpen, setImportOpen] = useState(false);
   const [record, setRecord] = useState<CandidateProfileRecord | null>(null);
   const [profile, setProfile] = useState<CandidateProfileData>(structuredClone(EMPTY_CANDIDATE_PROFILE));
   const [loading, setLoading] = useState(true);
@@ -69,14 +71,14 @@ export default function CandidateProfilePage() {
 
   useEffect(() => { void load(); }, [load]);
 
-  const save = useCallback(async (nextProfile = profile) => {
+  const save = useCallback(async (nextProfile = profile, expectedVersion?: number) => {
     setSaving(true);
     try {
       const response = await fetch('/api/profile', {
-        method: 'PUT', headers: requestHeaders(), body: JSON.stringify(nextProfile),
+        method: 'PUT', headers: requestHeaders(), body: JSON.stringify(expectedVersion === undefined ? nextProfile : { data: nextProfile, expectedVersion }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || '保存失败');
+      if (!response.ok) throw new Error(data.detail || data.error || '保存失败');
       const savedProfile = readProfile(data.data);
       setRecord(data);
       setProfile(savedProfile);
@@ -158,8 +160,9 @@ export default function CandidateProfilePage() {
       <header className={styles.hero}>
         <Image className={styles.motto} src="/images/profile/handwritten-motto.png" alt="更好的自己，正在路上" width={186} height={84} />
         <div className={templateStyles.heroContent}><p className={templateStyles.eyebrow}>个人资料库</p><h1 className={templateStyles.headline}>收藏成长的点滴，<br />为下一次机会做好准备。</h1>{profile.isSample && <span className={styles.sample}>虚构示例</span>}</div>
-        <Button disabled={optimizing || saving} onClick={optimize} className="gap-2 bg-slate-900 text-white hover:bg-slate-800">{optimizing ? <LoaderCircle size={16} className="animate-spin"/> : <Sparkles size={16}/>}一键优化表达</Button>
+        <div className="flex flex-wrap gap-2"><Button variant="outline" disabled={optimizing || saving || !record} onClick={() => setImportOpen(true)}><Upload size={16}/>附件智能填入</Button><Button disabled={optimizing || saving} onClick={optimize} className="gap-2 bg-slate-900 text-white hover:bg-slate-800">{optimizing ? <LoaderCircle size={16} className="animate-spin"/> : <Sparkles size={16}/>}一键优化表达</Button></div>
       </header>
+      {importOpen && <ProfileImportDialog current={profile} version={record?.version} onClose={() => setImportOpen(false)} onSave={save}/>}
       <ProfileNavigation value={activeTab} onChange={setActiveTab}/>
       <main className={styles.content}>
         <div className={styles.sectionHeading}><div><h2>{PROFILE_TABS.find(([key])=>key===activeTab)?.[1]}</h2><p>{activeTab==='basic'?'个人信息与求职方向':'整理每一段经历，让成长清晰可见。'}</p></div><button className={styles.sampleAction} disabled={saving || optimizing} onClick={loadSample}>加载虚构示例</button></div>
