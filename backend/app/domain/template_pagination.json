@@ -1,4 +1,40 @@
 {
+  "folio-ribbon-blue": {
+    "name": "蓝金折页",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
+  "folio-blueprint": {
+    "name": "蓝序简章",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
+  "folio-skyline": {
+    "name": "晴蓝映像",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
+  "folio-ember": {
+    "name": "橙线纪事",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
+  "folio-mesh": {
+    "name": "粉紫织网",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
+  "folio-compass": {
+    "name": "紫韵罗盘",
+    "mode": "prefer_one_page",
+    "reason": "单栏排版可自然续页，装饰页头仅出现在首页；优先单页，不强行截断已有内容",
+    "source": "frontend/src/components/preview/templates/reference-documents.tsx"
+  },
   "folio-cloud": {
     "name": "晴空林语",
     "mode": "prefer_one_page",

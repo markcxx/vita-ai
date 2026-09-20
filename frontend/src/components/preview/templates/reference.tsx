@@ -1,3 +1,4 @@
+import { DocumentReferenceTemplate, isDocumentTemplate } from './reference-documents';
 import type { CSSProperties, ReactNode } from 'react';
 import type { EducationContent, PersonalInfoContent, Resume, ResumeSection, SummaryContent } from '@/types/resume';
 import { isReferenceTemplate, referenceTheme } from '@/lib/reference-templates';
@@ -46,6 +47,7 @@ function SectionBody({ section, resume, color, notebook }: { section: ResumeSect
 
 /** The same inline-styled document is used by preview and downloadable exports. */
 export function ReferenceTemplate({ resume }: { resume: Resume }) {
+  if (isDocumentTemplate(resume.template)) return <DocumentReferenceTemplate resume={resume}/>;
   const variant = isReferenceTemplate(resume.template) ? resume.template : 'folio-banner';
   const theme = { ...referenceTheme(variant), ...resume.themeConfig };
   const color = /^#[0-9a-f]{6}$/i.test(theme.accentColor) ? theme.accentColor : referenceTheme(variant).accentColor;

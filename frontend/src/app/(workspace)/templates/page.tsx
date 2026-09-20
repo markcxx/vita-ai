@@ -42,9 +42,9 @@ const TEMPLATE_FILTERS = [
 type TemplateFilter = (typeof TEMPLATE_FILTERS)[number]['id'];
 
 const TEMPLATE_GROUPS: Record<Exclude<TemplateFilter, 'all'>, ReadonlySet<string>> = {
-  classic: new Set(['folio-floral', 'folio-banner', 'folio-line', 'classic', 'professional', 'formal', 'academic', 'executive', 'consultant', 'legal', 'teacher', 'scientist', 'medical']),
-  modern: new Set(['modern', 'minimal', 'elegant', 'clean', 'compact', 'nordic', 'swiss', 'japanese', 'berlin', 'euro', 'corporate', 'finance', 'metro', 'material']),
-  creative: new Set(['folio-cloud', 'folio-growth', 'folio-dots', 'folio-bookmark', 'folio-spark', 'folio-breeze', 'folio-diamond', 'folio-gear', 'folio-prism', 'folio-notebook', 'folio-botanical', 'folio-aqua', 'creative', 'designer', 'infographic', 'gradient', 'bold', 'timeline', 'blocks', 'magazine', 'artistic', 'retro', 'neon', 'watercolor', 'luxe', 'rose', 'card', 'zigzag', 'ribbon', 'mosaic', 'sidebar', 'two-column']),
+  classic: new Set(['folio-ribbon-blue', 'folio-blueprint', 'folio-floral', 'folio-banner', 'folio-line', 'classic', 'professional', 'formal', 'academic', 'executive', 'consultant', 'legal', 'teacher', 'scientist', 'medical']),
+  modern: new Set(['folio-skyline', 'folio-ember', 'modern', 'minimal', 'elegant', 'clean', 'compact', 'nordic', 'swiss', 'japanese', 'berlin', 'euro', 'corporate', 'finance', 'metro', 'material']),
+  creative: new Set(['folio-mesh', 'folio-compass', 'folio-cloud', 'folio-growth', 'folio-dots', 'folio-bookmark', 'folio-spark', 'folio-breeze', 'folio-diamond', 'folio-gear', 'folio-prism', 'folio-notebook', 'folio-botanical', 'folio-aqua', 'creative', 'designer', 'infographic', 'gradient', 'bold', 'timeline', 'blocks', 'magazine', 'artistic', 'retro', 'neon', 'watercolor', 'luxe', 'rose', 'card', 'zigzag', 'ribbon', 'mosaic', 'sidebar', 'two-column']),
   ats: new Set(['ats', 'developer', 'engineer', 'coder', 'startup']),
 };
 

@@ -3,6 +3,13 @@
  * template gallery. Rendering remains in the preview/export registries.
  */
 export const TEMPLATE_CATALOG = [
+  { id: 'folio-ribbon-blue', labelKey: 'dashboard.templateFolioRibbonBlue', name: '蓝金折页' },
+  { id: 'folio-blueprint', labelKey: 'dashboard.templateFolioBlueprint', name: '蓝序简章' },
+  { id: 'folio-skyline', labelKey: 'dashboard.templateFolioSkyline', name: '晴蓝映像' },
+  { id: 'folio-ember', labelKey: 'dashboard.templateFolioEmber', name: '橙线纪事' },
+  { id: 'folio-mesh', labelKey: 'dashboard.templateFolioMesh', name: '粉紫织网' },
+  { id: 'folio-compass', labelKey: 'dashboard.templateFolioCompass', name: '紫韵罗盘' },
+
   { id: 'folio-cloud', labelKey: 'dashboard.templateFolioCloud', name: '晴空林语' },
   { id: 'folio-growth', labelKey: 'dashboard.templateFolioGrowth', name: '向上阶梯' },
   { id: 'folio-dots', labelKey: 'dashboard.templateFolioDots', name: '点阵书页' },

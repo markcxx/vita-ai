@@ -39,6 +39,13 @@ interface TemplateStyle {
 }
 
 const TEMPLATE_STYLES: Record<string, TemplateStyle> = {
+  'folio-ribbon-blue': { accent: '#4e7484', headingStyle: 'bottom-border' },
+  'folio-blueprint': { accent: '#397eac', headingStyle: 'bg-badge' },
+  'folio-skyline': { accent: '#10b6f4', headingStyle: 'bg-badge' },
+  'folio-ember': { accent: '#ff782d', headingStyle: 'bottom-border' },
+  'folio-mesh': { accent: '#e39be4', headingStyle: 'bottom-border' },
+  'folio-compass': { accent: '#9b95dc', headingStyle: 'bottom-border' },
+
   'folio-cloud': { accent: '#71cdd0', headingStyle: 'plain' },
   'folio-growth': { accent: '#e69a9d', headingStyle: 'plain' },
   'folio-dots': { accent: '#cdd46d', headingStyle: 'plain' },

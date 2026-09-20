@@ -1,6 +1,13 @@
 import type { ThemeConfig } from '@/types/resume';
 
 export const REFERENCE_TEMPLATES = {
+  'folio-ribbon-blue': { label: '蓝金折页', color: '#4e7484' },
+  'folio-blueprint': { label: '蓝序简章', color: '#397eac' },
+  'folio-skyline': { label: '晴蓝映像', color: '#10b6f4' },
+  'folio-ember': { label: '橙线纪事', color: '#ff782d' },
+  'folio-mesh': { label: '粉紫织网', color: '#e39be4' },
+  'folio-compass': { label: '紫韵罗盘', color: '#9b95dc' },
+
   'folio-cloud': { label: '晴空林语', color: '#71cdd0' },
   'folio-growth': { label: '向上阶梯', color: '#e69a9d' },
   'folio-dots': { label: '点阵书页', color: '#cdd46d' },
@@ -24,6 +31,13 @@ export function isReferenceTemplate(id: string): id is ReferenceTemplate {
 }
 export const TEMPLATE_COLORS = ['#c9cb70', '#9c96d8', '#eb4c4f', '#55cdd0', '#418ac4', '#469b78', '#c38b55', '#454c58'];
 export function referenceTheme(template: string, color?: string): ThemeConfig {
+  const document = ['folio-ribbon-blue', 'folio-blueprint', 'folio-skyline', 'folio-ember', 'folio-mesh', 'folio-compass'].includes(template);
+  if (document) return {
+    primaryColor: '#333333', accentColor: color || (isReferenceTemplate(template) ? REFERENCE_TEMPLATES[template].color : '#397eac'),
+    fontFamily: 'Arial', fontSize: 'medium', lineSpacing: 1.7,
+    margin: { top: 20, right: 30, bottom: 26, left: 30 }, sectionSpacing: template === 'folio-ember' ? 28 : 22,
+    avatarStyle: 'oneInch',
+  };
   return {
     primaryColor: '#171717', accentColor: color || (isReferenceTemplate(template) ? REFERENCE_TEMPLATES[template].color : '#171717'),
     fontFamily: 'Arial', fontSize: 'medium', lineSpacing: 1.65,

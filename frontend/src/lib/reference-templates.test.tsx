@@ -40,3 +40,26 @@ describe('template HTML export coverage', () => {
     }
   });
 });
+
+describe('document reference layouts', () => {
+  const templates = ['folio-ribbon-blue', 'folio-blueprint', 'folio-skyline', 'folio-ember', 'folio-mesh', 'folio-compass'];
+  for (const template of templates) {
+    it(`${template} reflects edits, reordered sections and removed personal details`, () => {
+      const resume = fixture(template);
+      resume.sections[0].content.fullName = '修改后的姓名';
+      resume.sections[0].content.avatar = '';
+      resume.sections[2].sortOrder = -1;
+      resume.sections[2].title = '修改后的工作标题';
+      const html = renderToStaticMarkup(<ReferenceTemplate resume={resume} />);
+      expect(html).toContain('修改后的姓名');
+      expect(html).not.toContain('/sample.png');
+      expect(html.indexOf('修改后的工作标题')).toBeLessThan(html.indexOf('教育经历'));
+      expect(html).toContain(`data-document-template="${template}"`);
+      resume.sections[0].visible = false;
+      const hidden = renderToStaticMarkup(<ReferenceTemplate resume={resume} />);
+      expect(hidden).not.toContain('修改后的姓名');
+      expect(hidden).not.toContain('test@example.com');
+      expect(hidden).toContain('测试公司');
+    });
+  }
+});
