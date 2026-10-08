@@ -23,6 +23,7 @@ import type { LocalAttachment } from "./ChatInput";
 import type { ResumeEditProposal } from "./ResumeEditApprovalDialog";
 import { ResumeEditToolCard, type ProposalStatus } from "./ResumeEditToolCard";
 import { ResumeGenerationToolCard, type ResumeGenerationRequest, type ResumeGenerationState } from "./ResumeGenerationToolCard";
+import { ProfileUpdateToolCard } from "./ProfileUpdateToolCard";
 import { StudentStrengthsToolCard } from "./StudentStrengthsToolCard";
 
 export type ChatMessage = {
@@ -41,6 +42,7 @@ export type ChatMessage = {
 export type ChatMessageBlock =
   | { key: string; type: "text"; content: string }
   | { key: string; type: "reasoning"; content: string; thinking?: boolean }
+  | { key: string; type: "profile-update"; candidateInfo: string }
   | { key: string; type: "student-strengths"; requestId: string; createdAt?: string }
   | { key: string; type: "resume-edit"; proposal: ResumeEditProposal }
   | { key: string; type: "resume-generation"; request: ResumeGenerationRequest };
@@ -154,6 +156,7 @@ export function MessageItem({
   onMenuUnavailable,
   onApplyProposal,
   onGenerateResume,
+  onProfileSaved,
   onPreviewResume,
   onRegenerate,
   onRejectProposal,
@@ -170,6 +173,7 @@ export function MessageItem({
   onApplyProposal: (proposal: ResumeEditProposal) => void;
   onGenerateResume: (request: ResumeGenerationRequest, template: string) => void;
   onPreviewResume: (resumeId: string) => void;
+  onProfileSaved?: () => void;
   onRegenerate?: (message: ChatMessage) => void;
   onRejectProposal: (proposal: ResumeEditProposal) => void;
   proposalStatuses: Record<string, ProposalStatus>;
@@ -333,6 +337,7 @@ export function MessageItem({
                     </div>
                   );
                 }
+                if (block.type === "profile-update") return <ProfileUpdateToolCard key={block.key} candidateInfo={block.candidateInfo} onSaved={onProfileSaved}/>;
                 if (block.type === "student-strengths") {
                   return <StudentStrengthsToolCard key={block.requestId} requestId={block.requestId} autoStart={Boolean(message.isStreaming) || Boolean(block.createdAt && Date.now() - new Date(block.createdAt).getTime() < 60000)} />;
                 }

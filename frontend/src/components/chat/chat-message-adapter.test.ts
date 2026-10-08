@@ -53,3 +53,13 @@ describe('buildChatMessages', () => {
     expect(result[0].sourceMessageIds).toEqual(['a1', 'u1', 'a2']);
   });
 });
+
+it('preserves conversation material through template selection and offers profile review separately', () => {
+  const result = buildChatMessages([{ id: 'a', role: 'assistant', parts: [
+    { type: 'dynamic-tool', toolName: 'prepareTailoredResume', toolCallId: 'resume', state: 'output-available', input: {}, output: { success: true, requiresTemplateSelection: true, targetRole: '工程师', candidateInfo: '小林，测试大学', language: 'zh', profileVersion: 0 } },
+    { type: 'dynamic-tool', toolName: 'prepareProfileUpdate', toolCallId: 'profile', state: 'output-available', input: {}, output: { success: true, candidateInfo: '小林，测试大学' } },
+  ] }], 'ready');
+  expect(result[0].resumeGenerationRequests?.[0].candidateInfo).toBe('小林，测试大学');
+  expect(result[0].blocks).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'profile-update', candidateInfo: '小林，测试大学' })]));
+  expect(result[0].resumeEditProposals).toEqual([]);
+});

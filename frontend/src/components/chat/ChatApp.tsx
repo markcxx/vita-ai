@@ -549,7 +549,7 @@ ${ATTACHMENTS_CONTEXT_END}`,
       const response = await fetch("/api/ai/tailored-resume/stream", {
         method: "POST", signal: controller.signal,
         headers: { "Content-Type": "application/json",  },
-        body: JSON.stringify({ targetRole: request.targetRole, jobDescription: request.jobDescription, language: request.language, template, thinkingEnabled: requestOptions.current.thinkingEnabled }),
+        body: JSON.stringify({ targetRole: request.targetRole, jobDescription: request.jobDescription, candidateInfo: request.candidateInfo, language: request.language, template, thinkingEnabled: requestOptions.current.thinkingEnabled }),
       });
       if (!response.ok) {
         const error = await response.json().catch(() => ({}));
@@ -727,6 +727,7 @@ ${ATTACHMENTS_CONTEXT_END}`,
                 onMenuUnavailable={handleMenuUnavailable}
                 onApplyProposal={handleApplyProposal}
                 onGenerateResume={handleGenerateResume}
+                onProfileSaved={() => { void sendMessage({ text: `${WORKFLOW_EVENT_START}${JSON.stringify({ type: "profile_updated", instruction: "用户已确认且个人资料库已保存，简洁告知成功，不要重复提交修改。" })}${WORKFLOW_EVENT_END}` }); }}
                 onPreviewResume={handlePreviewResume}
                 onRegenerate={message.role === "assistant" ? handleRegenerate : undefined}
                 onRejectProposal={handleRejectProposal}

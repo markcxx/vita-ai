@@ -1,3 +1,4 @@
+import { readRendererInput } from './read-renderer-input';
 /** Private stdin/stdout renderer. FastAPI owns data and resource ownership. */
 import { withDefaultAvatars } from '../src/lib/resume/avatar-defaults';
 import { readFile } from 'node:fs/promises';
@@ -8,11 +9,7 @@ import { generatePdf, generateReportPdf } from '../src/lib/pdf/generate-pdf';
 import type { Resume } from '../src/types/resume';
 
 async function main() {
-  let input = '';
-  for await (const chunk of process.stdin) {
-    input += chunk;
-    if (input.length > 30_000_000) throw new Error('Resume payload too large');
-  }
+  const input = await readRendererInput(process.stdin);
   const payload = JSON.parse(input);
   if (payload.format === 'report-pdf') {
     const html = payload.resume?.html;

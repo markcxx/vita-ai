@@ -174,7 +174,7 @@ async def _select_resume_tool(state: ResumeChatState) -> ResumeChatState:
     if resume:
         tools = resume_tools(["selectResumeTool"], resume)
     else:
-        names = ["prepareTailoredResume", "analyzeStudentStrengths"]
+        names = ["prepareTailoredResume", "analyzeStudentStrengths", "prepareProfileUpdate"]
         tools = profile_tools(names, state.get("profile", {}), state.get("profile_version", 0))
     async for event in client.stream_events(
         system=state["system"],
@@ -318,7 +318,7 @@ async def _invoke_resume_tool(state: ResumeChatState) -> ResumeChatState:
     resume = state.get("resume")
     assert resume is not None
     selected_tools = (profile_tools([selected_tool], state.get("profile", {}), state.get("profile_version", 0))
-                      if selected_tool == "analyzeStudentStrengths" else resume_tools([selected_tool], resume))
+                      if selected_tool in {"analyzeStudentStrengths", "prepareProfileUpdate"} else resume_tools([selected_tool], resume))
     calls: list[dict[str, Any]] = []
     final_text = state.get("final_text", "")
     final_reasoning = state.get("final_reasoning", "")
@@ -378,7 +378,7 @@ async def _invoke_resume_tool(state: ResumeChatState) -> ResumeChatState:
                 writer({"type": "text", "delta": final_text})
         else:
             if not final_text:
-                final_text = ("正在根据你的个人资料库生成优势分析报告。" if selected_tool == "analyzeStudentStrengths" else "我已生成一份可审阅的修改方案，请在下方查看并决定是否应用。")
+                final_text = ("正在根据你的个人资料库生成优势分析报告。" if selected_tool == "analyzeStudentStrengths" else "请在下方整理并核对资料，确认后保存。" if selected_tool == "prepareProfileUpdate" else "我已生成一份可审阅的修改方案，请在下方查看并决定是否应用。")
                 writer({"type": "text", "delta": final_text})
             tool_parts.append(
                 {"toolName": call["name"], "args": call["arguments"], "result": output}

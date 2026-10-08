@@ -183,6 +183,12 @@ function toAssistantBlocks(message: UIMessage): ChatMessageBlock[] {
         return [{ key: `${message.id}-strengths-${toolCallId}`, type: 'student-strengths', requestId: output.requestId, createdAt: typeof output.createdAt === 'string' ? output.createdAt : undefined }];
       }
     }
+    if (getToolName(part) === 'prepareProfileUpdate' && part.state === 'output-available') {
+      const output = part.output;
+      if (isRecord(output) && output.success === true && typeof output.candidateInfo === 'string') {
+        return [{ key: `${message.id}-profile-${toolCallId}`, type: 'profile-update', candidateInfo: output.candidateInfo }];
+      }
+    }
     const proposal = proposals.get(toolCallId);
     if (proposal) {
       return [{ key: `${message.id}-proposal-${toolCallId}`, type: 'resume-edit', proposal }];

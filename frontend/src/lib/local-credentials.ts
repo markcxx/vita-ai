@@ -29,7 +29,7 @@ export function hasModelCredentials(value = loadCredentials()): boolean {
 }
 export function requiresModelCredentials(path: string, method: string): boolean {
   if (method.toUpperCase() !== 'POST') return false;
-  return /^\/api\/ai\/(chat|jd-analysis|grammar-check|cover-letter|generate-resume|profile\/optimize|tailored-resume(?:\/stream)?|translate|resume-edit\/optimize)$/.test(path)
+  return /^\/api\/ai\/(chat|jd-analysis|grammar-check|cover-letter|generate-resume|profile\/(?:optimize|draft)|tailored-resume(?:\/stream)?|translate|resume-edit\/optimize)$/.test(path)
     || /^\/api\/interview\/[^/]+\/(chat|report)$/.test(path)
     || ['/api/resume/parse', '/api/resume-analysis', '/api/student-strengths'].includes(path);
 }

@@ -78,21 +78,20 @@ def execute_profile_tool(
 ) -> dict[str, Any]:
     """Return client actions backed by the current candidate-profile snapshot."""
 
+    if name == "prepareProfileUpdate":
+        facts = str(arguments.get("candidateInfo") or "").strip()
+        if not facts or len(facts) > 60000:
+            return {"success": False, "retryable": True, "error": "请整理用户已提供的个人信息，长度为1至60000字"}
+        return {"success": True, "operation": "prepare_profile_update", "candidateInfo": facts,
+                "profileVersion": profile_version, "reason": str(arguments.get("reason") or "整理对话资料")}
     if name == "analyzeStudentStrengths":
         return {"success": True, "operation": "analyze_student_strengths", "requestId": str(uuid4()), "createdAt": datetime.now(UTC).isoformat(), "profileVersion": profile_version}
     if name != "prepareTailoredResume":
         return {"success": False, "retryable": False, "error": "Unknown profile tool"}
 
-    summary = profile.get("summary")
-    collections = ("experiences", "education", "projects", "skills")
-    has_material = bool(isinstance(summary, str) and summary.strip()) or any(
-        isinstance(profile.get(key), list) and bool(profile[key]) for key in collections
-    )
-    if not has_material:
-        return {
-            "success": False,
-            "error": "个人资料库还是空的，请先在个人资料库中补充经历，或加载虚构示例资料。",
-        }
+    candidate_info = str(arguments.get("candidateInfo") or "").strip()
+    if len(candidate_info) > 60000:
+        return {"success": False, "retryable": True, "error": "对话资料过长，请精简至60000字以内"}
 
     target_role = str(arguments.get("targetRole") or "").strip()
     if not target_role:
@@ -108,6 +107,7 @@ def execute_profile_tool(
         "jobDescription": str(arguments.get("jobDescription") or ""),
         "language": language,
         "profileVersion": profile_version,
+        **({"candidateInfo": candidate_info} if candidate_info else {}),
     }
 
 

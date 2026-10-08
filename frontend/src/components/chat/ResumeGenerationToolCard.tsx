@@ -15,6 +15,7 @@ export type ResumeGenerationRequest = {
   jobDescription: string;
   language: "zh" | "en";
   profileVersion: number;
+  candidateInfo?: string;
   requiresTemplateSelection: true;
 };
 

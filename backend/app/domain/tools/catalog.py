@@ -155,15 +155,22 @@ _optimization_changes = {
 # Authoritative schemas exposed to both the model adapter and the frontend.
 TOOL_CATALOG = LEGACY_TOOL_CATALOG + (
     _resume_tool(
+        "prepareProfileUpdate",
+        "用户明确要求填写、补充或更新个人资料库时调用。整理对话中的真实个人事实，展示可编辑草稿，由用户确认追加或覆盖后保存。仅生成简历时不需要调用。",
+        {"candidateInfo": {"type": "string", "minLength": 1, "maxLength": 60000}, **_reason},
+        ["candidateInfo", "reason"],
+    ),
+    _resume_tool(
         "analyzeStudentStrengths",
         "学生个人优势特点分析：用户要求结合个人资料分析优势、特点或生成个人优势报告时调用。只读取当前用户的个人资料库，界面自动生成可视化报告并在弹窗展示。",
         {}, [],
     ),
     _resume_tool(
         "prepareTailoredResume",
-        "根据候选人档案准备一份新简历。用户要求创建、编写或生成简历时调用；职位描述可选，界面会负责模板选择。",
+        "根据对话资料及可选的候选人档案准备新简历，资料库为空也可调用。必须将用户在对话和附件中提供的真实个人信息完整整理到candidateInfo，不得把JD要求或示例当作个人经历。职位描述可选，界面负责模板选择。",
         {
             "targetRole": {"type": "string", "minLength": 1},
+            "candidateInfo": {"type": "string", "maxLength": 60000, "description": "用户在当前及历史对话、附件中提供的个人事实，保留姓名、联系方式、教育、经历和日期；缺失留空，不编造。"},
             "jobDescription": {"type": "string"},
             "language": {"type": "string", "enum": ["zh", "en"], "default": "zh"},
             **_reason,
@@ -178,6 +185,7 @@ TOOL_CATALOG = LEGACY_TOOL_CATALOG + (
                 "type": "string",
                 "enum": [
                     "analyzeStudentStrengths",
+                    "prepareProfileUpdate",
                     "optimizeResume",
                     "updateResumeFields",
                     "fillMissingFields",

@@ -537,6 +537,17 @@ async def generate_resume(session: Session, user: WorkspaceOwner, body: dict = B
     }
 
 
+@router.post("/profile/draft")
+async def draft_profile(session: Session, user: WorkspaceOwner, body: dict = Body(...)) -> dict:
+    """Extract an editable draft only; saving uses the versioned profile endpoint."""
+    from app.services.resume_material import resolve_resume_material
+
+    facts = body.get("candidateInfo")
+    if not isinstance(facts, str) or not facts.strip():
+        raise HTTPException(422, "请提供要整理的个人信息")
+    return {"profile": await resolve_resume_material(ai_client(), {}, facts)}
+
+
 @router.post("/profile/optimize")
 async def optimize_profile(session: Session, user: WorkspaceOwner) -> dict:
     profile = await session.scalar(
@@ -557,20 +568,22 @@ async def tailored_resume(session: Session, user: WorkspaceOwner, body: dict = B
     profile = await session.scalar(
         select(CandidateProfile).where(CandidateProfile.user_id == user.id)
     )
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
     target_role = str(body.get("targetRole") or "").strip()
     if not target_role:
         raise HTTPException(status_code=422, detail="targetRole is required")
+    from app.services.resume_material import resolve_resume_material
+
+    client = ai_client()
+    material = await resolve_resume_material(client, profile.data if profile else {}, body.get("candidateInfo"))
     plan = await run_structured_completion(
-        ai_client(),
+        client,
         system=build_tailored_resume_prompt(str(body.get("template") or "classic"), str(body.get("language") or "zh")),
         prompt=(
             f"目标岗位：{target_role}\nJD：{body.get('jobDescription', '')}\n"
-            f"档案：{json.dumps(profile.data, ensure_ascii=False)}"
+            f"档案：{json.dumps(material, ensure_ascii=False)}"
         ),
     )
-    sections = build_tailored_sections(profile.data, plan, target_role)
+    sections = build_tailored_sections(material, plan, target_role)
     title = str(body.get("title") or f"{target_role} - 专项简历")
     resume = await create_resume(
         session,
@@ -587,15 +600,13 @@ async def tailored_resume(session: Session, user: WorkspaceOwner, body: dict = B
         "title": resume.title,
         "resume": resume_dto(resume),
         "plan": plan,
-        "profileVersion": profile.version,
+        "profileVersion": profile.version if profile else 0,
     }
 
 
 @router.post("/tailored-resume/stream")
 async def stream_tailored_resume(request: Request, session: Session, user: WorkspaceOwner, body: dict = Body(...)) -> StreamingResponse:
     profile = await session.scalar(select(CandidateProfile).where(CandidateProfile.user_id == user.id))
-    if not profile:
-        raise HTTPException(404, "请先完善个人资料库")
     target_role = str(body.get("targetRole") or "").strip()
     if not target_role:
         raise HTTPException(422, "请提供目标岗位")
@@ -609,15 +620,8 @@ async def stream_tailored_resume(request: Request, session: Session, user: Works
     def event(value: dict) -> str:
         return json.dumps(value, ensure_ascii=False) + "\n"
 
-    preview_profile = deepcopy(profile.data)
-    # Reveal generated prose as it arrives, rather than flashing the full source
-    # paragraph before its rewritten version is streamed.
-    for key in ("experiences", "education", "projects"):
-        for item in preview_profile.get(key, []):
-            if isinstance(item, dict):
-                item["description"] = ""
-                item["highlights"] = []
-
+    material = deepcopy(profile.data) if profile else {}
+    preview_profile = deepcopy(material)
     def snapshot(plan: dict) -> dict:
         sections = build_tailored_sections(preview_profile, plan, target_role)
         for i, section in enumerate(sections):
@@ -629,17 +633,27 @@ async def stream_tailored_resume(request: Request, session: Session, user: Works
         return {"type": "preview", "sections": sections}
 
     async def events() -> AsyncIterator[str]:
+        nonlocal material, preview_profile
         text = ""
         last_sent = 0.0
         last_snapshot = ""
         thinking_sent = False
         try:
-            yield event({"type": "status", "message": "正在整理个人资料"})
+            yield event({"type": "status", "message": "正在整理对话与个人资料"})
+            from app.services.resume_material import resolve_resume_material
+
+            material = await resolve_resume_material(client, material, body.get("candidateInfo"))
+            preview_profile = deepcopy(material)
+            for key in ("experiences", "education", "projects"):
+                for item in preview_profile.get(key, []):
+                    if isinstance(item, dict):
+                        item["description"] = ""
+                        item["highlights"] = []
             yield event(snapshot({}))
             async for delta in stream_completion(
                 client,
                 system=build_tailored_resume_prompt(template, language),
-                messages=[{"role": "user", "content": f"目标岗位：{target_role}\nJD：{body.get('jobDescription', '')}\n档案：{json.dumps(profile.data, ensure_ascii=False)}"}],
+                messages=[{"role": "user", "content": f"目标岗位：{target_role}\nJD：{body.get('jobDescription', '')}\n档案：{json.dumps(material, ensure_ascii=False)}"}],
             ):
                 if await request.is_disconnected():
                     return
@@ -677,7 +691,7 @@ async def stream_tailored_resume(request: Request, session: Session, user: Works
             yield event({"type": "status", "message": "内容已生成，正在保存"})
             resume = await create_resume(session, user, {
                 "title": title, "template": template, "language": language,
-                "sections": build_tailored_sections(profile.data, plan, target_role),
+                "sections": build_tailored_sections(material, plan, target_role),
             })
             yield event({"type": "complete", "resumeId": resume.id, "title": resume.title, "resume": resume_dto(resume)})
         except Exception:
