@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:26-alpine AS base
+FROM node:26.12.1-alpine AS base
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -28,7 +28,7 @@ RUN AUTH_SECRET=build-only-placeholder-not-used-at-runtime-0000000000 \
     DATABASE_URL=postgresql://build:build@127.0.0.1:5432/build \
     APP_URL=http://localhost:3000 pnpm build
 
-FROM node:26-alpine AS runner
+FROM node:26.12.1-alpine AS runner
 WORKDIR /app/frontend
 
 ENV NODE_ENV=production

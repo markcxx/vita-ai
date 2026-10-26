@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:26-bookworm-slim AS renderer-build
+FROM node:26.12.1-bookworm-slim AS renderer-build
 WORKDIR /workspace
 RUN npm install --global pnpm@10.29.2
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./

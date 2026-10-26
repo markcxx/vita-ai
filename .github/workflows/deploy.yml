@@ -20,7 +20,7 @@ jobs:
           version: 10.29.2
       - uses: actions/setup-node@v4
         with:
-          node-version: 26
+          node-version: "26.12.1"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm type-check && pnpm test
@@ -53,6 +53,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
+          pull: true
           context: .
           file: ${{ matrix.service }}/Dockerfile
           platforms: linux/amd64
